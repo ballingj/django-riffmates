@@ -20,3 +20,13 @@ def version(request):
         'version':'1.0.0',
         'creator':'Jeff Ballinger'
         })
+
+def news(request):
+    data = {
+        'news': [
+            "Riffmates now has a news page!",
+            "Riffmates has its first webpage.",
+        ],
+    }
+
+    return render(request, "news.html", data)
