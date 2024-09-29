@@ -48,7 +48,7 @@ path('news/', home_views.news, name='news')
 ...
 ```
 
-### Create the html file in the templates directory
+## Create the html file in the templates directory
 ```html
 <!-- riffmates_proj/templates/news.html-->
 <!DOCTYPE html>
@@ -69,4 +69,55 @@ path('news/', home_views.news, name='news')
     
 </body>
 </html>
+```
+
+## Common Tags and Filters
+
+### conditional blocks
+```python 
+
+{% if some_condition %}
+    <p>Display something</p>
+{% elif another_condition%}
+    <p>Do something else </p>
+{% else %}
+    <p>all else fails</p>
+{% endif %}
+```
+
+### looping blocks
+```python 
+# for loop
+<ul>
+    {% for item in items %}
+        <li> {{ item }} </li>
+    {% empty %}
+        <li>nothing found</li>        
+    {% endfor %}
+</ul>
+
+# forloop
+{% for instrument in instruments %}
+
+    {% if forloop.last %} and {% endif %}
+    {% forloop.counter %}. {{ instrument.name }}
+    {% if forloop.last %}. {% else %}, {% endif %}
+{% endfor %}
+
+```
+### comment block
+```python
+{# one line comment #}
+
+{% comment 'multiline comments' %}
+    <p>everything inside is commented</p>
+{% endcomment %}
+
+```
+### verbatim
+```python
+{% verbatim myblock%}
+    Used to ignore much of templating characters like {{}} for
+    example.
+{% endverbatim myblock%}
 ```

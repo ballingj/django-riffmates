@@ -1,0 +1,31 @@
+{% extends "base2.html" %}
+
+{% block title %}
+    {{block.super}}: News
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Riffmates News Advance bootstrap</h1>
+        <p>Date: {{ today | date:"m-d-Y"}}</p>
+
+        <table class="table table-light table-striped table-sm ">
+            <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Title</th>
+                </tr>
+              </thead>
+
+              <tbody class="table-group-divider">
+                {% for item in news %}
+                    <tr>
+                        <td>{{ item.0 | date:"m-d-Y" }}</td>
+                        <td>{{ item.1 }}</td>
+                    </tr>
+                {% endfor%}
+              </tbody>            
+        </table>
+    </div>
+{% endblock content %}
+

@@ -1,0 +1,18 @@
+{% extends "base2.html" %}
+
+{% block title %}
+    {{block.super}}: News
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Riffmates News (3) bootstrap</h1>
+
+        <ul>
+            {% for item in news %}
+                <li>{{ item }}</li>
+            {% endfor%}
+        </ul>
+    </div>
+{% endblock content %}
+

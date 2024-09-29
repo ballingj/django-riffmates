@@ -24,4 +24,8 @@ urlpatterns = [
     path('about/', home_views.about, name='about'),
     path('version/', home_views.version, name='version'),
     path('news/', home_views.news, name='news'),
+    path('news2/', home_views.news2, name='news2'),
+    path('news3/', home_views.news3, name='news3'),
+    path('news_bootstrap/', home_views.news_bootstrap, name='news_bootstrap'),
+    path('news_adv/', home_views.news_advanced, name='news_adv'),
 ]

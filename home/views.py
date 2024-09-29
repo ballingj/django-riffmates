@@ -29,3 +29,47 @@ def news(request):
         ],
     }
     return render(request, "news.html", data)
+
+def news2(request):
+    data = {
+        'news': [
+            "Riffmates now has a news page!",
+            "Riffmates has its first webpage.",
+        ],
+    }
+    return render(request, "news2.html", data)
+
+def news3(request):
+    data = {
+        'news': [
+            "Riffmates now has a news page!",
+            "Riffmates has its first webpage.",
+        ],
+    }
+    return render(request, "news3.html", data)
+
+def news_bootstrap(request):
+    import datetime
+    d = datetime.date
+    data = {
+        'news': [
+            (d(2024, 9, 28), "Latest news"),
+            (d(2024, 9, 25), "Yesterday's news"),
+            (d(2023, 9, 28), "Last year's news"),
+        ]
+    }
+    return render(request, "news_bootstrap.html", data)
+
+def news_advanced(request):
+    import datetime
+    d = datetime.date
+    dd = datetime.datetime.now()
+    data = {
+        'news': [
+            (d(2024, 9, 28), "Latest news"),
+            (d(2024, 9, 25), "Yesterday's news"),
+            (d(2023, 9, 28), "Last year's news"),
+        ],
+        'today': dd
+    }
+    return render(request, "news_adv.html", data)
