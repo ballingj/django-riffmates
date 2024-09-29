@@ -27,7 +27,7 @@ class Musician(models.Model):
     birth = models.DateField()
 ```
 
-### Run 'makemigrations' and 'migrate
+### Run 'makemigrations' and 'migrate'
 ``` sh
 ./manage.py makemigrations bands
 ./manage.py migrate
