@@ -21,10 +21,16 @@ INSTALLED_APPS = [
 
 ### Define the first ORM models
 ``` python
+# create the first table called Musician
 class Musician(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     birth = models.DateField()
+
+    # overwrite the base class to display a more meaningful object name
+    def __str__(self):
+        return f"Musician (id={self.id}, last_name={self.last_name})"
+
 ```
 
 ### Run 'makemigrations' and 'migrate'
@@ -33,8 +39,8 @@ class Musician(models.Model):
 ./manage.py migrate
 ```
 
-## Django ORM
-You can do this in django shell
+## Django ORM via CLI
+You can interact with the database using the django shell
 ```sh
 # Enter the django shell
 ./manage.py shell```
@@ -42,9 +48,11 @@ You can do this in django shell
 
 ### .create()
 ``` python
+# import required libraries
 from bands.models import Musician
 from datetime import date
 
+# insert some data
 Musician.objects.create(first_name="Steve", last_name="Vai", birth=date(1960, 6, 6))
 
 Musician.objects.create(first_name="John", last_name="Lennon", birth=date(1940, 10, 9))
@@ -54,33 +62,35 @@ Musician.objects.create(first_name="John", last_name="Bonham", birth=date(1948, 
 
 ### .objects Query
 ``` python
-Musician.objects.first()  # returns the first record
-Musician.objects.last()  # returns the last record
 Musician.objects.all() # returns all the records
 
 # Common practice to store the result in a variable
-
 result = Musician.objects.all()
 steve = result[0]
 
+# other objects query
+Musician.objects.first()  # returns the first record in the table
+Musician.objects.last()  # returns the last record
 ```
 
-### .filter() 
+### .filter()
+This is like using the where clause in SQL
 ``` python
 Musician.objects.filter(first_name="Steve")
 
 # you can chain the methods together
-result = Musician.objects.filter(first_name="John")
-
+result = Musician.objects.filter(first_name="John").first()
+# or
 result.first()
 ```
 
+
 ### Field Lookup
-Field look-ups are modifications to a query arguments expressed through double underscore (__) 
+Field look-ups are modifications to a query arguments filter method.  For example to find first_name starting with "J".  
 ``` python
 Musician.objects.filter(first_name__startswith="J")
 ```
-Here are some common look-ups
+Starting with double underscore (__) and the description of modification. Here are some common look-ups
 | Look-up |  Description |
 | -------- | ------------ |
 | __contains | 	Contains the phrase |
@@ -118,14 +128,15 @@ Here are some common look-ups
 ``` python
 Musician.objects.create(first_name="Roseanne", last_name="Barr", birth=date(1955, 7, 31))   # Is she a musician?
 
+# use .get() to instantiate an object
 roseanne = Musician.objects.get(id=5)
+# .get() only returns a single match, so use a unique identifier like the pk 
 
-# her birthday is actually 11/3/1952; update
+# use the object to manipulate data: her birthday is actually 11/3/1952; update
 roseanne.birth = date(1952, 11, 3)  # this only updates the object
 
 # Have to save() to write to the database
 roseanne.save()
-
 ```
 
 ### Deleting data
@@ -134,5 +145,88 @@ roseanne.save()
 
 roseanne.delete()  # Calling delete actually deletes the data in database, but not the class instance -- the variable roseanne still contains the values in the object
 
+```
+
+## Django MVT - Model, View, Template
+## URL based views
+Django uses URL based argument to query a specific record in the DB
+
+For example:
+```python
+# proj/bands/urls.py
+...
+urlpatterns = [
+    path('musician/<int:musician_id>/', views.musician, name='musician'),
+    path('musicians/', views.musicians, name='musicians'),
+]
+
+# http://localhost:8000/bands/musician/1/
+```
+
+### function based views 
+``` python
+# proj/bands/views.py
+from django.shortcuts import render, get_object_or_404
+
+from bands.models import Musician
+
+# List all the musicians record
+def musicians(request):
+    '''View for all the records.'''   
+    data = {
+        all_musicians = Musician.objects.all().order_by('last_name'),
+    }
+
+    return render(request, "musicians.html", data)
+
+# Single, specific record
+# using the built in 'get_object_404'
+def musician(request, musician_id):
+    '''View for single record.'''
+    musician = get_object_or_404(Musician, id=musician_id)
+
+    data = {
+        "musician": musician,
+    }
+
+    return render(request, "musician.html", data)
+
+```
+
+### Templates
+```html
+<!-- proj/templates/musicians.html -->
+{% extends "base.html" %}
+
+{% block title %}
+    {{block.super}}: Musician Listing
+{% endblock %}
+
+{% block content %}
+    <h1>Musicians</h1>
+    <ul>
+        {% for musician in musicians %}
+            <li><a href="{% url 'musician' musician.id %}">
+                {{musician.last_name}}, {{musician.first_name}}
+            </a></li>
+        {% empty %}
+            <li> <i>No musicians in the database</i> </li>
+        {% endfor %}
+    </ul>
+{% endblock content %}
+```
+
+```html
+<!-- proj/templates/musician.html -->
+{% extends "base.html" %}
+
+{% block title %}
+    {{block.super}}: Musician Details
+{% endblock %}
+
+{% block content %}
+    <h1>{{musician.first_name}} {{musician.last_name}}</h1>
+    <p> Was born {{musician.birth}}. </p>
+{% endblock content %}
 ```
 
