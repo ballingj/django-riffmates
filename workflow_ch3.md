@@ -5,7 +5,6 @@
 - 'APP_DIRS: True' means each App can use a templates directory
 
 ```sh
-...
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -21,7 +20,6 @@ TEMPLATES = [
         },
     },
 ]
-...
 ```
 
 ## Create the view
@@ -43,9 +41,7 @@ def news(request):
 
 ## create the urls
 ``` python
-...
 path('news/', home_views.news, name='news')
-...
 ```
 
 ## Create the html file in the templates directory
