@@ -1,0 +1,25 @@
+{% extends "base2.html" %}
+
+{% block title %}
+    {{block.super}}: Musicians
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Musicians</h1>
+
+        {% for musician in musicians %}
+            <h1><a href="{% url 'musician' musician.id %}">🤘</a> {{musician.last_name}}, {{musician.first_name}}</h1>
+        {% empty %}
+            <li> <i>No musicians in the database</i> </li>
+        {% endfor %}
+    </div>
+{% endblock content %}
+
+
+{% for musician in musicians %}
+<li> <a href="{% url 'musician' musician.id %}">
+  {{musician.last_name}}, {{musician.first_name}}
+</a> </li>
+
+{% endfor %}

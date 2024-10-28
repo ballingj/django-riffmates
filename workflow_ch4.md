@@ -116,11 +116,11 @@ Here are some common look-ups
 
 ### Modifying data
 ``` python
-Musician.objects.create(first_name="Roseanne", last_name="Barr", birth=date(1965, 7, 31))   # Is she a musician?
+Musician.objects.create(first_name="Roseanne", last_name="Barr", birth=date(1955, 7, 31))   # Is she a musician?
 
 roseanne = Musician.objects.get(id=5)
 
-# her birthday is actually 11/3/1952
+# her birthday is actually 11/3/1952; update
 roseanne.birth = date(1952, 11, 3)  # this only updates the object
 
 # Have to save() to write to the database
@@ -132,6 +132,7 @@ roseanne.save()
 ``` python
 # I hate to classify Roseanne as a singer; remember that butchering of National Anthem?
 
-roseanne.delete()  # Calling delete actually deletes the data in database, and not the object -- the variable roseanne still contains the values in the object
+roseanne.delete()  # Calling delete actually deletes the data in database, but not the class instance -- the variable roseanne still contains the values in the object
 
 ```
+

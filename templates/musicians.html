@@ -1,0 +1,31 @@
+{% extends "base2.html" %}
+
+{% block title %}
+    {{block.super}}: Musicians
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Musicians</h1>
+
+        {% for musician in musicians %}
+            <h1><a href="{% url 'musician' musician.id %}">🤘</a> {{musician.last_name}}, {{musician.first_name}}</h1>
+        {% empty %}
+            <li> <i>No musicians in the database</i> </li>
+        {% endfor %}
+    </div>
+
+    <!-- Navigation for paginator -->
+    {% if page.has_other_pages %}
+        {% if page.has_previous %}
+            <a href="{% url 'musicians' %}?page={{page.previous_page_number}}"
+                >Prev⬅️</a> 
+        {% endif %}
+        {% if page.has_next %}
+            <a href="{% url 'musicians' %}?page={{page.next_page_number}}"
+                >Next➡️</a>
+        {% endif %}
+    {% endif %}
+{% endblock content %}
+
+
