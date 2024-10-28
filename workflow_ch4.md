@@ -230,3 +230,117 @@ def musician(request, musician_id):
 {% endblock content %}
 ```
 
+## Database relationship
+one-to-many and many-to-many relationship
+![Image](zzimage/relationship.png)
+
+### ForeignKey field to link one-to-many
+```python
+...
+class Venue(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f"Venue(id={self.id}, name={self.name})"
+
+
+class Room(models.Model):
+    name = models.CharField(max_length=20)
+    venue = models.ForeignKey(Venue, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Room(id={self.id}, name={self.name})"
+...
+```
+After the migrations, you should be able to use the Django built in query manager to query the foreigh relationship.  
+ The query manager is named after the associated model
+with ```_set``` stuck on the end. Your Venue model has a ```.room_set``` query manager.
+
+Let's go back to django shell:
+``` sh
+./manage.py shell
+>>> from bands.models import Venue, Room
+>>> cbgb = Venue.objects.create(name="CBGB")
+>>> red = Room.objects.create(name="Red", venue=cbgb)
+>>> blue = Room.objects.create(name="Blue", venue=cbgb)
+>>> red.venue
+<Venue: Venue(id=1, name=CBGB)>
+>>> red.venue.id
+1
+>>> red.venue.name
+'CBGB'
+>> cbgb.room_set.all()
+<QuerySet [<Room: Room(id=1, name=Red)>, <Room: Room(id=2, name=Blue)>]>
+
+```
+
+
+### ManyToMany field to link many-to-many
+many-to-many relationship requires an intermediary table; Django creates this automatically.
+```python
+...
+class Band(models.Model):
+    name = models.CharField(max_length=20)
+    musicians = models.ManyToManyField(Musician)
+
+    def __str__(self):
+        return f"Band(id={self.id}, name={self.name})"
+...
+```
+Back in django shell:
+``` sh
+./manage.py shell
+>>> from bands.models import Band
+>>> beatles = Band.objects.create(name="The Beatles")
+>>> from bands.models import Musician
+>>> lennon = Musician.objects.get(last_name="Lennon")
+>>> lennon
+<Musician: Musician(id=2, last_name=Lennon)>
+```
+The .add() method on the .musicians query manager adds a Musician
+to the Band:
+``` sh
+>>> beatles.musicians.add(lennon)
+>>> beatles.musicians.all()
+<QuerySet [<Musician: Musician(id=2, last_name=Lennon)>]>
+```
+The Musician class now has a query manager named band_set. Using this
+query manager, you can determine which bands a given musician belongs to:
+``` sh
+>>> lennon.band_set.all()
+<QuerySet [<Band: Band(id=1, name=The Beatles)>]>
+```
+Because this is a many-to-many relationship, musicians can be associated with multiple bands. Let’s create a supergroup trio band, named Wishful Thinking, and add all three of our musicians:
+```sh
+>>> vai = Musician.objects.get(last_name="Vai")
+>>> bonham = Musician.objects.get(last_name="Bonham")
+>>> wishful = Band.objects.create(name="Wishful Thinking")
+>>> wishful.musicians.add(lennon, vai, bonham)
+>>> wishful.musicians.all()
+<QuerySet [<Musician: Musician(id=1, last_name=Vai)>,
+➥ <Musician: Musician(id=2, last_name=Lennon)>,
+➥ <Musician: Musician(id=3, last_name=Bonham)>]
+```
+
+## Fixtures
+A fixture is a text version of the data you have in your database.  Fixtures allow you to export and import database files
+
+``` sh
+# export data and input into 'bands.json' file
+./manage.py dumpdata bands > bands.json
+
+# or pretty print in screen
+manage.py dumpdata bands | python -m json.tool
+
+# the opposite is to import the data 
+./manage.py loaddata bands.json
+```
+
+Common practice to keep fixtures in its own directory
+``` sh
+mkdir bands/fixtures
+mv bands.json bands/fixtures/
+rm db.sqlite3
+./manage.py migrate
+./manage.py loaddata bands  # load the fixture using the app name instead of filename 
+```
