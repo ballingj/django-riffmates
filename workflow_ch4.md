@@ -43,7 +43,7 @@ class Musician(models.Model):
 You can interact with the database using the django shell
 ```sh
 # Enter the django shell
-./manage.py shell```
+./manage.py shell
 ```
 
 ### .create()
@@ -252,7 +252,7 @@ class Room(models.Model):
         return f"Room(id={self.id}, name={self.name})"
 ...
 ```
-After the migrations, you should be able to use the Django built in query manager to query the foreigh relationship.  
+After the migrations, you should be able to use the Django built in query manager to query the foreign relationship.  
  The query manager is named after the associated model
 with ```_set``` stuck on the end. Your Venue model has a ```.room_set``` query manager.
 
@@ -275,8 +275,10 @@ Let's go back to django shell:
 ```
 
 
-### ManyToMany field to link many-to-many
-many-to-many relationship requires an intermediary table; Django creates this automatically.
+### ManyToMany field to link many-to-many relationship
+#### intermediary table: many-to-many relationship requires an intermediary table; Django creates this automatically.
+![Image](zzimage/interm_table.png)
+
 ```python
 ...
 class Band(models.Model):
