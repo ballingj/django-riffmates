@@ -330,7 +330,7 @@ A fixture is a text version of the data you have in your database.  Fixtures all
 ./manage.py dumpdata bands > bands.json
 
 # or pretty print in screen
-manage.py dumpdata bands | python -m json.tool
+./manage.py dumpdata bands | python -m json.tool
 
 # the opposite is to import the data 
 ./manage.py loaddata bands.json
