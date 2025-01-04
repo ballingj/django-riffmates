@@ -99,6 +99,7 @@ class MusicianAdmin(admin.ModelAdmin):
     show_bands.short_description = "Bands"
 ```
 The resulting musicians admin page
+
 ![Image](zzimage/cross_linked_models.png)
 
 
