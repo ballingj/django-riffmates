@@ -3,9 +3,6 @@ from django.contrib import admin
 from bands.models import Musician, Band
 from datetime import datetime, date
 
-from django.utils.html import format_html
-from django.urls import reverse
-
 # This is the minimum line to add a model
 # admin.site.register(Musician)
 
@@ -53,34 +50,17 @@ class DecadeListFilter(admin.SimpleListFilter):
 
 @admin.register(Musician)
 class MusicianAdmin(admin.ModelAdmin):
-    list_display = ("id", "last_name", "first_name", "birth", "show_weekday", "show_bands")  # the 'show_weekday' & "show_bands" are callable -- not a field
+    list_display = ("id", "last_name", "first_name", "birth", "show_weekday")  # the 'show_weekday' is a callable -- not a field
     search_fields = ("last_name__startswith", "first_name__startswith", )
     # list_filter = ("birth", ) 
     list_filter = (DecadeListFilter, ) 
     
-    # callable column for weekday -- customized
+    
     def show_weekday(self, obj):
         # Fetch weekday of artist’s birth
         return obj.birth.strftime("%A") # format %A is for the weekday
 
     show_weekday.short_description = "Birth Weekday" # custom column header
-    
-    # callable column for bands -- customized
-    def show_bands(self, obj):
-        bands = obj.band_set.all()
-        if len(bands) == 0:
-            return format_html("<i>None</i>")
-        
-        # if more than one band, pluralize
-        plural = ""
-        if len(bands) > 1:
-            plural = "s"
-        
-        parm = "?id__in=" + ",".join([str(b.id) for b in bands])
-        url = reverse("admin:bands_band_changelist") + parm
-        return format_html('<a href="{}">Band{}</a>', url, plural)
-
-    show_bands.short_description = "Bands"
 
 @admin.register(Band)
 class BandAdmin(admin.ModelAdmin):

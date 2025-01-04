@@ -6,6 +6,9 @@ class Musician(models.Model):
     last_name = models.CharField(max_length=50)
     birth = models.DateField()
 
+    class Meta:
+        ordering = ["last_name", "first_name"]
+        
     def __str__(self):
         return f"Musician (id={self.id}, last_name={self.last_name})"
 

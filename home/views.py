@@ -28,7 +28,7 @@ def news(request):
             "Riffmates has its first webpage.",
         ],
     }
-    return render(request, "news.html", data)
+    return render(request, "home/news.html", data)
 
 def news2(request):
     data = {
@@ -37,7 +37,7 @@ def news2(request):
             "Riffmates has its first webpage.",
         ],
     }
-    return render(request, "news2.html", data)
+    return render(request, "home/news2.html", data)
 
 def news3(request):
     data = {
@@ -46,7 +46,7 @@ def news3(request):
             "Riffmates has its first webpage.",
         ],
     }
-    return render(request, "news3.html", data)
+    return render(request, "home/news3.html", data)
 
 def news_bootstrap(request):
     import datetime
@@ -58,7 +58,7 @@ def news_bootstrap(request):
             (d(2023, 9, 28), "Last year's news"),
         ]
     }
-    return render(request, "news_bootstrap.html", data)
+    return render(request, "home/news_bootstrap.html", data)
 
 def news_advanced(request):
     import datetime
@@ -72,4 +72,4 @@ def news_advanced(request):
         ],
         'today': dd
     }
-    return render(request, "news_adv.html", data)
+    return render(request, "home/news_adv.html", data)
